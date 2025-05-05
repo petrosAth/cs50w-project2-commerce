@@ -10,7 +10,6 @@ class User(AbstractUser):
 
 class Category(models.Model):
     title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
 
     def __str__(self):
         return f"title: {self.title}"

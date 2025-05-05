@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Category, Listing, Bid, Comment
 
 
 def index(request):
@@ -73,24 +73,30 @@ def create_auction(request):
     if "title" and "description" and "starting_bid" not in request.POST:
         return render(
             request,
-            {"title": "New Auction"},
             "auctions/create.html",
+            {"title": "Create Auction", "categories": Category.objects.all()},
         )
     else:
         title = request.POST["title"] or ""
         description = request.POST["description"] or ""
         starting_bid = request.POST["starting_bid"] or ""
         owner = User.objects.get(pk=request.user.id)
-        listings = Listing(
+        listing = Listing(
             title=title,
             description=description,
             starting_price=starting_bid,
             owner=owner,
             active=True,
         )
-        listings.save()
+        listing.save()
+
+        selected_categories = request.POST.getlist("category_list")
+        for category_title in selected_categories:
+            category = Category.objects.get(title=category_title)
+            listing.category.add(category)
+
         return HttpResponse(
-            f"Title: {title}<br>Description: {description}<br>starting_bid: {starting_bid}".encode(
+            f"Title: {title}<br>Description: {description}<br>starting_bid: {starting_bid}<br>catetories: {selected_categories}".encode(
                 "utf-8"
             )
         )

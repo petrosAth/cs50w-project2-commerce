@@ -11,7 +11,7 @@ class ListingAdmin(admin.ModelAdmin):
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "description")
+    list_display = ("id", "title")
 
 
 # Register your models here.
