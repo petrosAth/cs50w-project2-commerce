@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listings, Bids, Comments
 
 
 def index(request):
@@ -67,8 +67,27 @@ def register(request):
 
 
 def new_listing(request):
-    return render(
-        request,
-        "auctions/new.html",
-        {"title": "New Auction"},
-    )
+    if "title" and "description" and "starting_bid" not in request.POST:
+        return render(
+            request,
+            "auctions/new.html",
+            {"title": "New Auction"},
+        )
+    else:
+        title = request.POST["title"] or ""
+        description = request.POST["description"] or ""
+        starting_bid = request.POST["starting_bid"] or ""
+        owner = User.objects.get(pk=request.user.id)
+        listings = Listings(
+            title=title,
+            description=description,
+            starting_price=starting_bid,
+            owner=owner,
+            active=True,
+        )
+        listings.save()
+        return HttpResponse(
+            f"Title: {title}\nDescription: {description}\nstarting_bid: {starting_bid}".encode(
+                "utf-8"
+            )
+        )
