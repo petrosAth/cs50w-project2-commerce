@@ -8,7 +8,15 @@ class User(AbstractUser):
     pass
 
 
-class Listings(models.Model):
+class Category(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"title: {self.title}"
+
+
+class Listing(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     starting_price = models.FloatField(max_length=6)
@@ -18,27 +26,28 @@ class Listings(models.Model):
     winner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="purchases", blank=True, null=True
     )
+    category = models.ManyToManyField(Category, related_name="listings")
 
     def __str__(self):
-        return f"title: {self.title}\n description: {self.description}\n starting_price: {self.starting_price}\n photo_url: {self.photo_url}\n owner: {self.owner}\n active: {self.active}\n winner: {self.winner}\n"
+        return f"title: {self.title}<br> description: {self.description}<br> starting_price: {self.starting_price}<br> photo_url: {self.photo_url}<br> owner: {self.owner}<br> active: {self.active}<br> winner: {self.winner}<br>"
 
 
-class Bids(models.Model):
+class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
-    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="bids")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
     amount = models.FloatField(max_length=6)
 
     def __str__(self):
-        return f"user: {self.user}\nlisting: {self.listing}\namount: {self.amount}"
+        return f"user: {self.user}<br>listing: {self.listing}<br>amount: {self.amount}"
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(
-        Listings, on_delete=models.CASCADE, related_name="comments"
+        Listing, on_delete=models.CASCADE, related_name="comments"
     )
     created = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
 
     def __str__(self):
-        return f"user: {self.user}\nlisting: {self.listing}\ncreated: {self.created}\ncontent: {self.content}"
+        return f"user: {self.user}<br>listing: {self.listing}<br>created: {self.created}<br>content: {self.content}"

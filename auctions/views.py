@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Listings, Bids, Comments
+from .models import User, Listing, Bid, Comment
 
 
 def index(request):
@@ -78,7 +78,7 @@ def new_listing(request):
         description = request.POST["description"] or ""
         starting_bid = request.POST["starting_bid"] or ""
         owner = User.objects.get(pk=request.user.id)
-        listings = Listings(
+        listings = Listing(
             title=title,
             description=description,
             starting_price=starting_bid,
@@ -87,7 +87,7 @@ def new_listing(request):
         )
         listings.save()
         return HttpResponse(
-            f"Title: {title}\nDescription: {description}\nstarting_bid: {starting_bid}".encode(
+            f"Title: {title}<br>Description: {description}<br>starting_bid: {starting_bid}".encode(
                 "utf-8"
             )
         )
