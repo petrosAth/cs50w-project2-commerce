@@ -17,12 +17,20 @@
             <textarea class="form-control" name="description" id="description" required></textarea>
         </div>
         <div class="input-group mb-3">
+            <span class="input-group-text">URL</span>
+            <input type="text"
+                   class="form-control"
+                   name="photo_url"
+                   placeholder="Photo URL">
+        </div>
+        <div class="input-group mb-3">
             <span class="input-group-text">Starting Bid</span>
             <input type="number"
                    class="form-control"
                    name="starting_bid"
                    min="0.00"
                    step="0.01"
+                   placeholder="0.00"
                    required>
             <span class="input-group-text">$</span>
         </div>

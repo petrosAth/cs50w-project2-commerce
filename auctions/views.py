@@ -80,11 +80,13 @@ def create_auction(request):
         title = request.POST["title"] or ""
         description = request.POST["description"] or ""
         starting_bid = request.POST["starting_bid"] or ""
+        photo_url = request.POST["photo_url"]
         owner = User.objects.get(pk=request.user.id)
         listing = Listing(
             title=title,
             description=description,
             starting_price=starting_bid,
+            photo_url=photo_url,
             owner=owner,
             active=True,
         )
