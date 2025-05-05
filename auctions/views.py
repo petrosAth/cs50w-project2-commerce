@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, decorators
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -66,10 +66,8 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@decorators.login_required(login_url="auctions:login")
 def create_auction(request):
-    if not request.user.id:
-        return login_view(request)
-
     if "title" and "description" and "starting_bid" not in request.POST:
         return render(
             request,
