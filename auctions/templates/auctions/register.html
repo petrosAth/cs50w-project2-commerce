@@ -4,30 +4,21 @@
     {% if message %}<div>{{ message }}</div>{% endif %}
     <form action="{% url 'auctions:register' %}" method="post">
         {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control"
-                   autofocus
-                   type="text"
-                   name="username"
-                   placeholder="Username">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Username</span>
+            <input class="form-control" autofocus type="text" name="username">
         </div>
-        <div class="form-group">
-            <input class="form-control"
-                   type="email"
-                   name="email"
-                   placeholder="Email Address">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Email Address</span>
+            <input class="form-control" type="email" name="email">
         </div>
-        <div class="form-group">
-            <input class="form-control"
-                   type="password"
-                   name="password"
-                   placeholder="Password">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Password</span>
+            <input class="form-control" type="password" name="password">
         </div>
-        <div class="form-group">
-            <input class="form-control"
-                   type="password"
-                   name="confirmation"
-                   placeholder="Confirm Password">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Confirm Password</span>
+            <input class="form-control" type="password" name="confirmation">
         </div>
         <input class="btn btn-primary" type="submit" value="Register">
     </form>

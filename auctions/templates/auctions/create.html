@@ -1,10 +1,10 @@
 {% extends "auctions/layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
-    <h1>New Auction</h1>
-    <form action="{% url "auctions:new" %}" method="post">
+    <h2>Create Auction</h2>
+    <form action="{% url "auctions:create" %}" method="post">
         {% csrf_token %}
-        <div class="input-group">
+        <div class="input-group mb-3">
             <span class="input-group-text">Title</span>
             <input type="text"
                    class="form-control"
@@ -12,11 +12,11 @@
                    placeholder="Auction Title"
                    required>
         </div>
-        <div class="input-group">
+        <div class="input-group mb-3">
             <span class="input-group-text">Description</span>
             <textarea class="form-control" name="description" id="description" required></textarea>
         </div>
-        <div class="input-group">
+        <div class="input-group mb-3">
             <span class="input-group-text">Starting Bid</span>
             <input type="number"
                    class="form-control"
@@ -24,6 +24,7 @@
                    min="0.00"
                    step="0.01"
                    required>
+            <span class="input-group-text">$</span>
         </div>
         <button type="submit" class="btn btn-primary">Create Auction</button>
     </form>

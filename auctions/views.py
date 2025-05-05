@@ -66,12 +66,15 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-def new_listing(request):
+def create_auction(request):
+    if not request.user.id:
+        return login_view(request)
+
     if "title" and "description" and "starting_bid" not in request.POST:
         return render(
             request,
-            "auctions/new.html",
             {"title": "New Auction"},
+            "auctions/create.html",
         )
     else:
         title = request.POST["title"] or ""
