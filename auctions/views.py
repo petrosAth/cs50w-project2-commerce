@@ -8,7 +8,7 @@ from .models import User, Category, Listing, Photo, Bid, Comment, Watchlist
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return active_listings(request)
 
 
 def login_view(request):
