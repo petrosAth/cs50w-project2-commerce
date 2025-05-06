@@ -62,3 +62,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"user: {self.user}<br>listing: {self.listing}<br>created: {self.created}<br>content: {self.content}"
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watched")
+    auction = models.ForeignKey(
+        Listing, on_delete=models.CASCADE, related_name="watched"
+    )
+
+    def __str__(self):
+        return f"user: {self.user}<br>listing: {self.auction}"

@@ -22,7 +22,8 @@
                         {% if auction.category.all %}
                             <div class="btn-group mb-3">
                                 {% for category in auction.category.all %}
-                                    <a href="#" class="btn btn-outline-secondary">{{ category.title }}</a>
+                                    <a href="{% url 'auctions:category' category.pk %}"
+                                       class="btn btn-outline-secondary">{{ category.title }}</a>
                                 {% endfor %}
                             </div>
                         {% endif %}
