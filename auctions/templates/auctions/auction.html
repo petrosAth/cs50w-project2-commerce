@@ -2,6 +2,16 @@
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
     <h2>{{ title }}</h2>
+    <form action="{% url "auctions:auction" auction.pk %}" method="post">
+        {% csrf_token %}
+        <input type="hidden"
+               name="{% if is_watched %}unwatch{% else %}watch{% endif %}"
+               value="{{ auction.pk }}">
+        <button type="submin"
+                class="btn {% if is_watched %} btn-primary {% else %} btn-outline-primary {% endif %}">
+            <i class="bi {% if is_watched %} bi-eye-fill {% else %} bi-eye {% endif %}"></i>
+        </button>
+    </form>
     <p>{{ auction.title }}</p>
     <p>{{ auction.description }}</p>
     <p>{{ auction.starting_price }}</p>

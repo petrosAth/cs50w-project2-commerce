@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Category, Listing, Photo, Bid, Comment
+from .models import User, Category, Listing, Photo, Bid, Comment, Watchlist
 
 
 def index(request):
@@ -101,20 +101,35 @@ def create_auction(request):
 
 
 def active_listings(request):
-    active_auctions = Listing.objects.filter(active=True)
+    auctions_list = Listing.objects.filter(active=True)
     return render(
         request,
-        "auctions/active.html",
-        {"title": "Active Listings", "active_auctions": active_auctions},
+        "auctions/auctions.html",
+        {"title": "Active Listings", "auctions_list": auctions_list},
     )
 
 
+@decorators.login_required(login_url="auctions:login")
 def auction(request, listing_id):
     auction = Listing.objects.get(pk=listing_id)
+    is_watched = auction.watched.filter(user=request.user.id).exists()  # type: ignore
+
+    if "watch" in request.POST:
+        watchlist_user = User.objects.get(pk=request.user.id)
+        watchlist_auction = Listing.objects.get(pk=request.POST["watch"])
+        watched_auction = Watchlist(user=watchlist_user, auction=watchlist_auction)
+        watched_auction.save()
+    elif "unwatch" in request.POST:
+        Watchlist.objects.get(
+            user_id=request.user.id, auction_id=request.POST["unwatch"]
+        ).delete()
+
+    is_watched = auction.watched.filter(user=request.user.id).exists()  # type: ignore
+
     return render(
         request,
         "auctions/auction.html",
-        {"title": "Auction Details", "auction": auction},
+        {"title": "Auction Details", "auction": auction, "is_watched": is_watched},
     )
 
 
@@ -130,9 +145,20 @@ def categories(request):
 
 def category(request, category_id):
     category = Category.objects.get(pk=category_id)
-    active_auctions = category.listings.filter(active=True)  # type: ignore
+    auctions_list = category.listings.filter(active=True)  # type: ignore
     return render(
         request,
-        "auctions/active.html",
-        {"title": category.title, "active_auctions": active_auctions},
+        "auctions/auctions.html",
+        {"title": category.title, "auctions_list": auctions_list},
+    )
+
+
+def watchlist(request):
+    watched = User.objects.get(pk=request.user.id).watched.all()  # type: ignore
+    auctions_list = [entry.auction for entry in watched]
+
+    return render(
+        request,
+        "auctions/auctions.html",
+        {"title": "Watchlist", "auctions_list": auctions_list},
     )

@@ -2,7 +2,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
     <h2>{{ title }}</h2>
-    {% for auction in active_auctions %}
+    {% for auction in auctions_list %}
         <div class="card mb-3"
              onclick="location.href='{% url 'auctions:auction' auction.pk %}'"
              style="cursor: pointer">
