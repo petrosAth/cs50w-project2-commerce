@@ -107,3 +107,12 @@ def active_listings(request):
         "auctions/active.html",
         {"title": "Active Listings", "active_auctions": active_auctions},
     )
+
+
+def auction(request, listing_id):
+    auction = Listing.objects.get(pk=listing_id)
+    return render(
+        request,
+        "auctions/auction.html",
+        {"title": "Auction Details", "auction": auction},
+    )

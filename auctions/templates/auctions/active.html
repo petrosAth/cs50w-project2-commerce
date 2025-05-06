@@ -3,7 +3,9 @@
 {% block body %}
     <h2>{{ title }}</h2>
     {% for auction in active_auctions %}
-        <div class="card mb-3">
+        <div class="card mb-3"
+             onclick="location.href='{% url 'auctions:auction' auction.pk %}'"
+             style="cursor: pointer">
             <div class="row g-0">
                 {% if auction.photos.all %}
                     <div class="col-md-4">
