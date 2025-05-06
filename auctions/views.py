@@ -101,13 +101,5 @@ def create_auction(request):
 
 
 def active_listings(request):
-    listings = Listing.objects.filter(active=1)
-    active_auctions = []
-    for listing in listings:
-        active_auctions.append(
-            {
-                "listing": listing,
-                "photo": Photo.objects.filter(listing=listing.pk).first(),
-            }
-        )
+    active_auctions = Listing.objects.filter(active=True)
     return render(request, "auctions/active.html", {"active_auctions": active_auctions})

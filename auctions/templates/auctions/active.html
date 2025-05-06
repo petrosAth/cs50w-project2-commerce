@@ -5,19 +5,19 @@
     {% for auction in active_auctions %}
         <div class="card mb-3">
             <div class="row g-0">
-                {% if auction.photo %}
+                {% if auction.photos.all %}
                     <div class="col-md-4">
-                        <img src="{{ auction.photo.img.url }}"
-                             alt="{{ auction.photo.name }}"
+                        <img src="{{ auction.photos.first.img.url }}"
+                             alt="{{ auction.photos.first.name }}"
                              class="img-fluid rounded-start">
                     </div>
                 {% endif %}
                 <div class="col-md-8">
                     <div class="card-body d-flex align-items-start flex-column"
                          style="height: 100%">
-                        <h5 class="card-title">{{ auction.listing.title }}</h5>
-                        <p class="card-text">{{ auction.listing.description }}</p>
-                        <div class="alert alert-primary mt-auto" role="alert">Price: {{ auction.listing.starting_price }} $</div>
+                        <h5 class="card-title">{{ auction.title }}</h5>
+                        <p class="card-text">{{ auction.description }}</p>
+                        <div class="alert alert-primary mt-auto" role="alert">Price: {{ auction.starting_price }} $</div>
                     </div>
                 </div>
             </div>
