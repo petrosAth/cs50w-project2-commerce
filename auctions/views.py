@@ -116,3 +116,23 @@ def auction(request, listing_id):
         "auctions/auction.html",
         {"title": "Auction Details", "auction": auction},
     )
+
+
+def categories(request):
+    categories = Category.objects.all()
+
+    return render(
+        request,
+        "auctions/categories.html",
+        {"title": "Categories", "categories": categories},
+    )
+
+
+def category(request, category_id):
+    category = Category.objects.get(pk=category_id)
+    active_auctions = category.listings.filter(active=True)  # type: ignore
+    return render(
+        request,
+        "auctions/active.html",
+        {"title": category.title, "active_auctions": active_auctions},
+    )
