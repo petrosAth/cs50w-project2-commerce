@@ -28,16 +28,19 @@ class Listing(models.Model):
     category = models.ManyToManyField(Category, related_name="listings")
 
     def __str__(self):
-        return f"title: {self.title}<br> description: {self.description}<br> starting_price: {self.starting_price}<br> photo_url: {self.photo_url}<br> owner: {self.owner}<br> active: {self.active}<br> winner: {self.winner}<br>"
+        return f"title: {self.title}<br>description: {self.description}<br>starting_price: {self.starting_price}<br>photo_url: {self.photo_url}<br>owner: {self.owner}<br>active: {self.active}<br>winner: {self.winner}"
 
 
-class Photos(models.Model):
+class Photo(models.Model):
     name = models.CharField(max_length=200)
     img = models.ImageField(upload_to="photos/")
     listing = models.ForeignKey(
         Listing, on_delete=models.CASCADE, related_name="photos"
     )
     position = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return f"name: {self.name}<br>path: {self.img}<br>listing: {self.listing.pk}<br>position: {self.position}"
 
 
 class Bid(models.Model):
