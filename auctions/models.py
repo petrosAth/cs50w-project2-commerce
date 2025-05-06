@@ -31,6 +31,15 @@ class Listing(models.Model):
         return f"title: {self.title}<br> description: {self.description}<br> starting_price: {self.starting_price}<br> photo_url: {self.photo_url}<br> owner: {self.owner}<br> active: {self.active}<br> winner: {self.winner}<br>"
 
 
+class Photos(models.Model):
+    name = models.CharField(max_length=200)
+    img = models.ImageField(upload_to="photos/")
+    listing = models.ForeignKey(
+        Listing, on_delete=models.CASCADE, related_name="photos"
+    )
+    position = models.IntegerField(blank=True, null=True)
+
+
 class Bid(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")

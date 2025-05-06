@@ -2,7 +2,9 @@
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
     <h2>Create Auction</h2>
-    <form action="{% url "auctions:create" %}" method="post">
+    <form action="{% url "auctions:create" %}"
+          method="post"
+          enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
             <span class="input-group-text">Title</span>
@@ -17,11 +19,8 @@
             <textarea class="form-control" name="description" id="description" required></textarea>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text">URL</span>
-            <input type="text"
-                   class="form-control"
-                   name="photo_url"
-                   placeholder="Photo URL">
+            <span class="input-group-text">Upload Image</span>
+            <input type="file" class="form-control" name="image" id="image">
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text">Starting Bid</span>

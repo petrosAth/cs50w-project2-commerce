@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Category, Listing, Bid, Comment
+from .models import User, Category, Listing, Photos, Bid, Comment
 
 
 def index(request):
@@ -78,13 +78,11 @@ def create_auction(request):
         title = request.POST["title"] or ""
         description = request.POST["description"] or ""
         starting_bid = request.POST["starting_bid"] or ""
-        photo_url = request.POST["photo_url"]
         owner = User.objects.get(pk=request.user.id)
         listing = Listing(
             title=title,
             description=description,
             starting_price=starting_bid,
-            photo_url=photo_url,
             owner=owner,
             active=True,
         )
@@ -95,8 +93,14 @@ def create_auction(request):
             category = Category.objects.get(title=category_title)
             listing.category.add(category)
 
-        return HttpResponse(
-            f"Title: {title}<br>Description: {description}<br>starting_bid: {starting_bid}<br>catetories: {selected_categories}".encode(
-                "utf-8"
-            )
+        if "image" in request.FILES:
+            image_file = request.FILES["image"]
+            Photos.objects.create(name=image_file.name, img=image_file, listing=listing)
+
+        return HttpResponseRedirect(reverse("auctions:index"))
+        # return HttpResponse(
+        #     f"Title: {title}<br>Description: {description}<br>starting_bid: {starting_bid}<br>catetories: {selected_categories}".encode(
+        #         "utf-8"
+        #     )
+        # )
         )

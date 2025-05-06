@@ -83,7 +83,7 @@ DATABASES = {
 
 AUTH_USER_MODEL = "auctions.User"
 
-# Default primary key field
+# Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -125,3 +125,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
+
+
+# Filesystem path to the directory that will hold user-uploaded files
+# https://docs.djangoproject.com/en/5.2/ref/settings/#media-root/
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
