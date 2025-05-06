@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>{{ title }}</h2>
     {% for auction in active_auctions %}
         <div class="card mb-3">
             <div class="row g-0">
@@ -17,6 +17,13 @@
                          style="height: 100%">
                         <h5 class="card-title">{{ auction.title }}</h5>
                         <p class="card-text">{{ auction.description }}</p>
+                        {% if auction.category.all %}
+                            <div class="btn-group mb-3">
+                                {% for category in auction.category.all %}
+                                    <a href="#" class="btn btn-outline-secondary">{{ category.title }}</a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                         <div class="alert alert-primary mt-auto" role="alert">Price: {{ auction.starting_price }} $</div>
                     </div>
                 </div>

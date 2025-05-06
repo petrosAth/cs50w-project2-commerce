@@ -102,4 +102,8 @@ def create_auction(request):
 
 def active_listings(request):
     active_auctions = Listing.objects.filter(active=True)
-    return render(request, "auctions/active.html", {"active_auctions": active_auctions})
+    return render(
+        request,
+        "auctions/active.html",
+        {"title": "Active Listings", "active_auctions": active_auctions},
+    )
