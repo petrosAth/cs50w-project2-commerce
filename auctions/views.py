@@ -103,4 +103,16 @@ def create_auction(request):
         #         "utf-8"
         #     )
         # )
+
+
+def active_listings(request):
+    listings = Listing.objects.filter(active=1)
+    active_auctions = []
+    for listing in listings:
+        active_auctions.append(
+            {
+                "listing": listing,
+                "photo": Photos.objects.filter(listing=listing.pk).first(),
+            }
         )
+    return render(request, "auctions/active.html", {"active_auctions": active_auctions})
