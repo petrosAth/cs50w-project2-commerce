@@ -109,7 +109,6 @@ def active_listings(request):
     )
 
 
-@decorators.login_required(login_url="auctions:login")
 def auction(request, listing_id):
     auction = Listing.objects.get(pk=listing_id)
     is_watched = auction.watched.filter(user=request.user.id).exists()  # type: ignore
@@ -153,6 +152,7 @@ def category(request, category_id):
     )
 
 
+@decorators.login_required(login_url="auctions:login")
 def watchlist(request):
     watched = User.objects.get(pk=request.user.id).watched.all()  # type: ignore
     auctions_list = [entry.auction for entry in watched]
