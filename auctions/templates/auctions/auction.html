@@ -46,7 +46,7 @@
     </p>
     {{ message }}
     {% if user.is_authenticated %}
-        <form action="{% url "auctions:place_bid" auction.pk %}" method="post">
+        <form action="{% url 'auctions:place_bid' auction.pk %}" method="post">
             {% csrf_token %}
             <div class="input-group mb-3">
                 <span class="input-group-text">Bid</span>
@@ -60,6 +60,26 @@
                 <span class="input-group-text">$</span>
             </div>
             <button type="submit" class="btn btn-primary">Place Bid</button>
+        </form>
+    {% endif %}
+    {% for comment in comments %}
+        <div>
+            <p>{{ comment.content }}</p>
+            <p>{{ comment.user }}</p>
+        </div>
+    {% endfor %}
+    {% if user.is_authenticated %}
+        <form action="{% url 'auctions:comment' auction.pk %}" method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <span class="input-group-text">Comment</span>
+                <textarea name="comment"
+                          id="comment"
+                          class="form-control"
+                          required
+                          placeholder="Share your thoughts about this auction..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
         </form>
     {% endif %}
 {% endblock %}

@@ -145,6 +145,8 @@ def auction(request, listing_id, message=""):
         user_id=request.user.id, auction_id=listing_id
     ).exists()
 
+    comments = Comment.objects.filter(listing_id=listing_id).all().order_by("created")
+
     return render(
         request,
         "auctions/auction.html",
@@ -154,6 +156,7 @@ def auction(request, listing_id, message=""):
             "is_watched": is_watched,
             "current_bid": current_bid,
             "message": message,
+            "comments": comments,
         },
     )
 
@@ -233,3 +236,18 @@ def close(request, listing_id):
     else:
         message = "There are no bids for this auction yer."
         return auction(request, listing_id, message)
+
+
+@decorators.login_required(login_url="auctions:login")
+def comment(request, listing_id):
+    content = request.POST["comment"]
+    comment_exists = Comment.objects.filter(
+        user_id=request.user.id, content=content
+    ).exists()
+    if not comment_exists:
+        Comment(
+            user=User.objects.get(pk=request.user.id),
+            listing=Listing.objects.get(pk=listing_id),
+            content=request.POST["comment"],
+        ).save()
+    return auction(request, listing_id)
