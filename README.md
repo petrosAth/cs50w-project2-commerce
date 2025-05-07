@@ -2,8 +2,8 @@
 
 This project is an online auction platform built with Django. It allows users to
 register, log in, log out, and interact with auction listings. The application
-supports user authentication, listing creation, bidding, commenting, and
-categorization of auctions.
+supports user authentication, listing creation, bidding, commenting, watchlist
+and categorization of auctions.
 
 This website was created as part of
 [CS50's Web Programming with Python and JavaScript](https://pll.harvard.edu/course/cs50s-web-programming-python-and-javascript),
