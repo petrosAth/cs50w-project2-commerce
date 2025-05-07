@@ -26,9 +26,7 @@
             <li class="nav-item px-2">
                 <a class="nav-link position-relative {% if title == 'Watchlist' %}active{% endif %} {% if not user.is_authenticated %}disabled{% endif %}"
                    href="{% url 'auctions:watchlist' %}">Watchlist
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ user.watched.count }}
-                    </span>
+                    {% if user.watched.count %}<span class="badge bg-danger">{{ user.watched.count }}</span>{% endif %}
                 </a>
             </li>
             <li class="nav-item px-2">
