@@ -1,7 +1,6 @@
 {% extends "auctions/layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
-    <h2>Create Auction</h2>
     <form action="{% url "auctions:create" %}"
           method="post"
           enctype="multipart/form-data">

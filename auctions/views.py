@@ -29,7 +29,7 @@ def login_view(request):
                 {"message": "Invalid username and/or password."},
             )
     else:
-        return render(request, "auctions/login.html")
+        return render(request, "auctions/login.html", {"title": "Login"})
 
 
 def logout_view(request):
@@ -47,7 +47,9 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {"message": "Passwords must match."}
+                request,
+                "auctions/register.html",
+                {"title": "Register", "message": "Passwords must match."},
             )
 
         # Attempt to create new user

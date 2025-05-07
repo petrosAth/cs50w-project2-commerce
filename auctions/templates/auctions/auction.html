@@ -1,7 +1,6 @@
 {% extends "auctions/layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
-    <h2>{{ title }}</h2>
     <form action="{% url "auctions:auction" auction.pk %}" method="post">
         {% csrf_token %}
         <input type="hidden"
