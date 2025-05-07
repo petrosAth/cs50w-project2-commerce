@@ -26,7 +26,17 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <div class="alert alert-primary mt-auto" role="alert">Price: {{ auction.starting_price }} $</div>
+                        {% with auction.bids.all|dictsortreversed:"amount"|first as highest_bid %}
+                            <div class="alert alert-primary mt-auto" role="alert">
+                                Price
+                                {% if highest_bid %}
+                                    {{ highest_bid.amount }}
+                                {% else %}
+                                    {{ auction.starting_price }}
+                                {% endif %}
+                                $
+                            </div>
+                        {% endwith %}
                     </div>
                 </div>
             </div>
