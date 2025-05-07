@@ -26,10 +26,10 @@ def login_view(request):
             return render(
                 request,
                 "auctions/login.html",
-                {"message": "Invalid username and/or password."},
+                {"title": "Login", "message": "Invalid username and/or password."},
             )
     else:
-        return render(request, "auctions/login.html", {"title": "Login"})
+        return render(request, "auctions/login.html", {"title": "Log In"})
 
 
 def logout_view(request):
@@ -60,12 +60,18 @@ def register(request):
             return render(
                 request,
                 "auctions/register.html",
-                {"message": "Username already taken."},
+                {"title": "Register", "message": "Username already taken."},
             )
         login(request, user)
         return HttpResponseRedirect(reverse("auctions:index"))
     else:
-        return render(request, "auctions/register.html")
+        return render(
+            request,
+            "auctions/register.html",
+            {
+                "title": "Register",
+            },
+        )
 
 
 @decorators.login_required(login_url="auctions:login")
@@ -74,7 +80,7 @@ def create_auction(request):
         return render(
             request,
             "auctions/create.html",
-            {"title": "Create Auction", "categories": Category.objects.all()},
+            {"title": "Create Listing", "categories": Category.objects.all()},
         )
     else:
         title = request.POST["title"] or ""

@@ -14,27 +14,21 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
-        <div>
-            {% if user.is_authenticated %}
-                Signed in as <strong>{{ user.username }}</strong>.
-            {% else %}
-                Not signed in.
-            {% endif %}
-        </div>
-        <ul class="nav nav-pills">
+        <ul class="nav nav-pills mt-3">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:active' %}">Active Listings</a>
+                <a class="nav-link {% if title == 'Active Listings' %}active{% endif %}"
+                   href="{% url 'auctions:active' %}">Active Listings</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'auctions:categories' %}">Categories</a>
+                <a class="nav-link {% if title == 'Categories' %}active{% endif %}"
+                   href="{% url 'auctions:categories' %}">Categories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if not user.is_authenticated %}disabled{% endif %}"
+                <a class="nav-link {% if title == 'Watchlist' %}active{% endif %} {% if not user.is_authenticated %}disabled{% endif %}"
                    href="{% url 'auctions:watchlist' %}">Watchlist</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if not user.is_authenticated %}disabled{% endif %}"
+                <a class="nav-link {% if title == 'Create Listing' %}active{% endif %} {% if not user.is_authenticated %}disabled{% endif %}"
                    href="{% url 'auctions:create' %}">Create Listing</a>
             </li>
             {% if user.is_authenticated %}
@@ -43,15 +37,25 @@
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'auctions:login' %}">Log In</a>
+                    <a class="nav-link {% if title == 'Log In' %}active{% endif %}"
+                       href="{% url 'auctions:login' %}">Log In</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'auctions:register' %}">Register</a>
+                    <a class="nav-link {% if title == 'Register' %}active{% endif %}"
+                       href="{% url 'auctions:register' %}">Register</a>
                 </li>
             {% endif %}
+            <li class="nav-item" style="margin-left: auto;">
+                <span href="#" class="nav-link" style="color: var(--bs-heading-color);">
+                    {% if user.is_authenticated %}
+                        <i class="bi bi-person-fill"></i> <strong class="text-capitalize">{{ user.username }}</strong>
+                    {% else %}
+                        Not signed in.
+                    {% endif %}
+                </span>
+            </li>
         </ul>
         <hr>
-        <h2>{{ title }}</h2>
         {% block body %}{% endblock %}
     </body>
 </html>
