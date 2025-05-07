@@ -111,6 +111,12 @@ def active_listings(request):
 
 def auction(request, listing_id):
     auction = Listing.objects.get(pk=listing_id)
+    current_bid = (
+        auction.bids.filter(listing_id=listing_id)  # type: ignore
+        .order_by("-amount")
+        .first()
+        .amount
+    )
     is_watched = auction.watched.filter(  # type: ignore
         user_id=request.user.id, auction_id=listing_id
     ).exists()
@@ -135,7 +141,12 @@ def auction(request, listing_id):
     return render(
         request,
         "auctions/auction.html",
-        {"title": "Auction Details", "auction": auction, "is_watched": is_watched},
+        {
+            "title": "Auction Details",
+            "auction": auction,
+            "is_watched": is_watched,
+            "current_bid": current_bid,
+        },
     )
 
 
@@ -161,11 +172,37 @@ def category(request, category_id):
 
 @decorators.login_required(login_url="auctions:login")
 def watchlist(request):
-    watched = User.objects.get(pk=request.user.id).watched.all()  # type: ignore
+    watched = User.objects.filter(pk=request.user.id).watched.all()  # type: ignore
     auctions_list = [entry.auction for entry in watched]
 
     return render(
         request,
         "auctions/auctions.html",
         {"title": "Watchlist", "auctions_list": auctions_list},
+    )
+
+
+@decorators.login_required(login_url="auctions:login")
+def place_bid(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    if listing.owner.id != request.user.id:
+        if "bid_amount" in request.POST:
+            bid_amount = request.POST["bid_amount"]
+            if listing.bids.exists():  # type: ignore
+                highest_bid = listing.bids.all().order_by("-amount").first()  # type: ignore
+                if (
+                    float(bid_amount) > highest_bid.amount
+                    and highest_bid.user.id != request.user.id  # type: ignore
+                ):
+                    bid_user = User.objects.get(pk=request.user.id)
+                    bid_auction = Listing.objects.get(pk=listing_id)
+                    bid = Bid(user=bid_user, listing=bid_auction, amount=bid_amount)
+                    bid.save()
+            elif float(bid_amount) > listing.starting_price:
+                bid_user = User.objects.get(pk=request.user.id)
+                bid_auction = Listing.objects.get(pk=listing_id)
+                bid = Bid(user=bid_user, listing=bid_auction, amount=bid_amount)
+                bid.save()
+    return HttpResponseRedirect(
+        reverse("auctions:auction", kwargs={"listing_id": listing_id})
     )
