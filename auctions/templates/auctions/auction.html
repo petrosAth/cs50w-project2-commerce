@@ -68,7 +68,7 @@
                             <small class="text-muted text-capitalize">Winner: {{ auction.winner }}</small>
                         </p>
                     {% endif %}
-                    <div class="mt-auto d-flex justify-content-between flex-row"
+                    <div class="mt-auto d-flex justify-content-start flex-row"
                          style="width:100%;
                                 gap: 20px">
                         {% with auction.bids.all|dictsortreversed:"amount"|first as highest_bid %}
@@ -80,12 +80,19 @@
                                     ${{ auction.starting_price }}
                                 {% endif %}
                             </div>
+                            {% if not auction.winner and highest_bid.user.id == user.id %}
+                                <div class="alert alert-light m-0" role="alert" style="gap: 5px">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                    <span>You are the highest bidder!</span>
+                                </div>
+                            {% endif %}
                         {% endwith %}
                         {% if user.is_authenticated %}
                             <form action="{% url 'auctions:place_bid' auction.pk %}"
                                   method="post"
                                   class="d-flex justify-content-end flex-row"
-                                  style="gap: 20px">
+                                  style="gap: 20px;
+                                         margin-left: auto">
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <span class="input-group-text">Bid</span>
