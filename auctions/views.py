@@ -109,13 +109,18 @@ def active_listings(request):
     )
 
 
-def auction(request, listing_id):
+def auction(request, listing_id, message=""):
     auction = Listing.objects.get(pk=listing_id)
+    bid = auction.bids.filter(listing_id=listing_id)  # type: ignore
     current_bid = (
-        auction.bids.filter(listing_id=listing_id)  # type: ignore
-        .order_by("-amount")
-        .first()
-        .amount
+        (
+            auction.bids.filter(listing_id=listing_id)  # type: ignore
+            .order_by("-amount")
+            .first()
+            .amount
+        )
+        if bid.exists()
+        else None
     )
     is_watched = auction.watched.filter(  # type: ignore
         user_id=request.user.id, auction_id=listing_id
@@ -146,6 +151,7 @@ def auction(request, listing_id):
             "auction": auction,
             "is_watched": is_watched,
             "current_bid": current_bid,
+            "message": message,
         },
     )
 
@@ -185,24 +191,29 @@ def watchlist(request):
 @decorators.login_required(login_url="auctions:login")
 def place_bid(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    if listing.owner.id != request.user.id:
+    message = ""
+    if listing.owner.id == request.user.id:
+        message = "You cannot bid on your own auction."
+    else:
         if "bid_amount" in request.POST:
             bid_amount = request.POST["bid_amount"]
             if listing.bids.exists():  # type: ignore
                 highest_bid = listing.bids.all().order_by("-amount").first()  # type: ignore
-                if (
-                    float(bid_amount) > highest_bid.amount
-                    and highest_bid.user.id != request.user.id  # type: ignore
-                ):
-                    bid_user = User.objects.get(pk=request.user.id)
-                    bid_auction = Listing.objects.get(pk=listing_id)
-                    bid = Bid(user=bid_user, listing=bid_auction, amount=bid_amount)
-                    bid.save()
+                if float(bid_amount) > highest_bid.amount:
+                    if highest_bid.user.id != request.user.id:  # type: ignore
+                        bid_user = User.objects.get(pk=request.user.id)
+                        bid_auction = Listing.objects.get(pk=listing_id)
+                        bid = Bid(user=bid_user, listing=bid_auction, amount=bid_amount)
+                        bid.save()
+                    else:
+                        message = "You are already the highest bidder."
+                else:
+                    message = "Your bid must be higher than the current bid."
             elif float(bid_amount) > listing.starting_price:
                 bid_user = User.objects.get(pk=request.user.id)
                 bid_auction = Listing.objects.get(pk=listing_id)
                 bid = Bid(user=bid_user, listing=bid_auction, amount=bid_amount)
                 bid.save()
-    return HttpResponseRedirect(
-        reverse("auctions:auction", kwargs={"listing_id": listing_id})
-    )
+            else:
+                message = "Your bid must be higher than the starting price."
+    return auction(request, listing_id, message)

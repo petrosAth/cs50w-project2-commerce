@@ -30,6 +30,7 @@
             -$
         {% endif %}
     </p>
+    {{ message }}
     {% if user.is_authenticated %}
         <form action="{% url "auctions:place_bid" auction.pk %}" method="post">
             {% csrf_token %}
