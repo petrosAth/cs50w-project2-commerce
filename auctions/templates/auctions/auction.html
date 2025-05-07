@@ -2,7 +2,7 @@
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
     {% if message %}<div class="alert alert-danger" role="alert">{{ message }}</div>{% endif %}
-    {% if auction.winner.id == user.id %}
+    {% if user.is_authenticated and auction.winner.id and auction.winner.id == user.id %}
         <div class="alert alert-primary">
             Congratulations {{ user.name }}! You won this auction with a bid of
             <strong>${{ current_bid }}</strong>
