@@ -219,3 +219,17 @@ def place_bid(request, listing_id):
             else:
                 message = "Your bid must be higher than the starting price."
     return auction(request, listing_id, message)
+
+
+@decorators.login_required(login_url="auctions:login")
+def close(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    highest_bidder = listing.bids.all().order_by("-amount").first()  # type: ignore
+    if highest_bidder:
+        listing.winner = highest_bidder.user
+        listing.active = False
+        listing.save()
+        return HttpResponseRedirect(reverse("auctions:index"))
+    else:
+        message = "There are no bids for this auction yer."
+        return auction(request, listing_id, message)

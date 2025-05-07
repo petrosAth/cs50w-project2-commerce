@@ -1,6 +1,13 @@
 {% extends "auctions/layout.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block body %}
+    <p>Title: {{ auction.title }}</p>
+    {% if auction.winner.id == user.id %}
+        <p>
+            Congratulations {{ user.name }}! You won this auction with a bid of
+            ${{ current_bid }}
+        </p>
+    {% endif %}
     <form action="{% url "auctions:auction" auction.pk %}" method="post">
         {% csrf_token %}
         <input type="hidden"
@@ -12,21 +19,29 @@
                 <i class="bi {% if is_watched %} bi-eye-fill {% else %} bi-eye {% endif %}"></i>
             </button>
         {% else %}
-            <button type="submin" class="btn  btn-secondary" disabled>
-                <i class="bi  bi-eye-fill"></i>
+            <button type="submin" class="btn btn-secondary" disabled>
+                <i class="bi bi-eye-fill"></i>
             </button>
         {% endif %}
     </form>
-    <p>{{ auction.owner }}</p>
-    <p>{{ auction.title }}</p>
-    <p>{{ auction.description }}</p>
-    <p>Starting Price: {{ auction.starting_price }}$</p>
+    {% if auction.active == True and user.is_authenticated and auction.owner.id == user.id %}
+        <form action="{% url "auctions:close" auction.pk %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-hammer"></i>
+            </button>
+        </form>
+    {% endif %}
+    <p>Original Owner: {{ auction.owner }}</p>
+    {% if auction.winner %}<p>Winner: {{ auction.winner }}</p>{% endif %}
+    <p>Description: {{ auction.description }}</p>
+    <p>Starting Price: ${{ auction.starting_price }}</p>
     <p>
         Current Bid:
         {% if current_bid %}
-            {{ current_bid }}$
+            ${{ current_bid }}
         {% else %}
-            -$
+            -
         {% endif %}
     </p>
     {{ message }}

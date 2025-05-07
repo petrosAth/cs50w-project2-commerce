@@ -30,11 +30,10 @@
                             <div class="alert alert-primary mt-auto" role="alert">
                                 Price
                                 {% if highest_bid %}
-                                    {{ highest_bid.amount }}
+                                    ${{ highest_bid.amount }}
                                 {% else %}
-                                    {{ auction.starting_price }}
+                                    ${{ auction.starting_price }}
                                 {% endif %}
-                                $
                             </div>
                         {% endwith %}
                     </div>
