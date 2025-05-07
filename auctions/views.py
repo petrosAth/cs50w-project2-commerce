@@ -111,19 +111,26 @@ def active_listings(request):
 
 def auction(request, listing_id):
     auction = Listing.objects.get(pk=listing_id)
-    is_watched = auction.watched.filter(user=request.user.id).exists()  # type: ignore
+    is_watched = auction.watched.filter(  # type: ignore
+        user_id=request.user.id, auction_id=listing_id
+    ).exists()
 
     if "watch" in request.POST:
-        watchlist_user = User.objects.get(pk=request.user.id)
-        watchlist_auction = Listing.objects.get(pk=request.POST["watch"])
-        watched_auction = Watchlist(user=watchlist_user, auction=watchlist_auction)
-        watched_auction.save()
+        if not Watchlist.objects.filter(
+            user_id=request.user.id, auction_id=request.POST["watch"]
+        ).exists():
+            watchlist_user = User.objects.get(pk=request.user.id)
+            watchlist_auction = Listing.objects.get(pk=request.POST["watch"])
+            watched_auction = Watchlist(user=watchlist_user, auction=watchlist_auction)
+            watched_auction.save()
     elif "unwatch" in request.POST:
         Watchlist.objects.get(
             user_id=request.user.id, auction_id=request.POST["unwatch"]
         ).delete()
 
-    is_watched = auction.watched.filter(user=request.user.id).exists()  # type: ignore
+    is_watched = auction.watched.filter(  # type: ignore
+        user_id=request.user.id, auction_id=listing_id
+    ).exists()
 
     return render(
         request,
