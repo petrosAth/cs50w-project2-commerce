@@ -178,7 +178,7 @@ def category(request, category_id):
 
 @decorators.login_required(login_url="auctions:login")
 def watchlist(request):
-    watched = User.objects.filter(pk=request.user.id).watched.all()  # type: ignore
+    watched = User.objects.get(pk=request.user.id).watched.all()  # type: ignore
     auctions_list = [entry.auction for entry in watched]
 
     return render(
